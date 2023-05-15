@@ -1,0 +1,15 @@
+* {
+    margin: 1rem;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#campus-image {
+    width: 6rem;
+    height: 5rem;
+}
+
+#student-image {
+    width: 5%;
+    height: 5%;
+}

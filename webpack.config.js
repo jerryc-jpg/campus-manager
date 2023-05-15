@@ -15,12 +15,21 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /jsx?$/,
+        test: /\.jsx?$/, // Matches JavaScript files
         exclude: /node_modules/,
-        loader: "babel-loader",
-        options: {
-          presets: ["@babel/preset-env", "@babel/preset-react"],
-        },
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              presets: ["@babel/preset-env", "@babel/preset-react"],
+            },
+          },
+        ],
+      },
+      {
+        test: /\.css$/, // Matches CSS files
+        exclude: /node_modules/,
+        use: ["style-loader", "css-loader"],
       },
     ],
   },

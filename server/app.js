@@ -32,7 +32,9 @@ app.get('/api/campuses', async (req, res, next) => {
 
 app.get('/api/students/:id', async (req, res, next) => {
   try {
-    const student = await db.models.Student.findByPk(req.params.id)
+    const student = await db.models.Student.findByPk(req.params.id, {
+      include: db.models.Campus
+    }) 
     res.send(student)
   } catch (error) {
     next(error)
@@ -41,7 +43,9 @@ app.get('/api/students/:id', async (req, res, next) => {
 
 app.get('/api/campuses/:id', async (req, res, next) => {
   try {
-    const campus = await db.models.Campus.findByPk(req.params.id)
+    const campus = await db.models.Campus.findByPk(req.params.id, {
+      include: db.models.Student
+    })
     res.send(campus)
   } catch (error) {
     next(error)

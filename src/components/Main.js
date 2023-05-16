@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import { fetchCampuses, fetchStudents } from "../store";
 import Campuses from "./Campuses";
 import Students from "./Students";
+import SingleCampus from "./Campus";
+import SingleStudent from "./Student";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -21,13 +23,13 @@ const Main = () => {
           <Link to="/students">Students</Link>
         </nav>
         <h1>
-          <Link to="/">Acme Schools</Link>
+          Acme Schools
         </h1>
         <Routes>
           <Route path="/campuses" element={<Campuses />} />
           <Route path="/students" element={<Students />} />
-          <Route path="/students/:id" element={<Students />} />
-          <Route path="/campuses/:id" element={<Campuses />} />
+          <Route path="/students/:id" element={<SingleStudent />} />
+          <Route path="/campuses/:id" element={<SingleCampus />} />
         </Routes>
       </div>
     </Router>

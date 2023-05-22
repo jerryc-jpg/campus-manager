@@ -21,7 +21,6 @@ const Student = conn.define('student', {
         allowNull: false,
         validate: {
             notEmpty: true,
-            isEmail: true
         }
     },
     imageUrl: {
@@ -33,10 +32,6 @@ const Student = conn.define('student', {
     },
     gpa: {
         type: Sequelize.DECIMAL,
-        validate: {
-            min: 0.0,
-            max: 4.0
-        }
     }
 });
 

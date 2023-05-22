@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const conn = require('./conn');
+const validator = require('validator');
 
 const Campus = conn.define('campus', {
     name: {
@@ -12,16 +13,10 @@ const Campus = conn.define('campus', {
     imageUrl: {
         type: Sequelize.STRING,
         defaultValue: "https://blog.hubspot.com/hs-fs/hubfs/oregon-state-university-logo.png?width=373&name=oregon-state-university-logo.png",
-        validate: {
-            isUrl: true
-        }
     },
     address: {
         type: Sequelize.STRING,
         allowNull: false,
-        validate: {
-            notEmpty: true
-        }
     },
     description: {
         type: Sequelize.TEXT,

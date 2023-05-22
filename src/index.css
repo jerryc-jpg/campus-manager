@@ -5,6 +5,12 @@
     list-style: none;
 }
 
+form {
+    display: flex;
+    flex-direction: column;
+    
+}
+
 #campus-image {
     width: 6rem;
     height: 5rem;

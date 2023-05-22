@@ -1,48 +1,66 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchSingleCampus } from "../store";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { updateCampus, deleteStudent } from "../store";
+import { useParams, Link, useNavigate } from "react-router-dom";
 
 const SingleCampus = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const campus = useSelector((state) =>
-    state.campuses.find((campus) => campus.id === id * 1)
-  );
-  const students = useSelector((state) =>
-    state.students.filter((student) => student.campusId === id * 1)
-  );
+  const { campuses, students } = useSelector((state) => state);
+  const navigate = useNavigate();
+
+  const [name, setName] = React.useState("");
+  const [address, setAddress] = React.useState("");
+  const [description, setDescription] = React.useState("");
+  const [imageUrl, setImageUrl] = React.useState("");
+
   React.useEffect(() => {
-    dispatch(fetchSingleCampus(id));
+    const campus = campuses.find((campus) => campus.id === id * 1);
+    if (campus) {
+      setName(campus.name);
+      setAddress(campus.address);
+      setDescription(campus.description);
+      setImageUrl(campus.imageUrl);
+    }
   }, [id]);
 
-  if (!campus) { // this fixes the error that occurs when you refresh the page
-    return null;
-  }
-  
+  const updateCampusInfo = async (event) => {
+    event.preventDefault();
+    const campus = { name, address, description, imageUrl, id };
+    await dispatch(updateCampus(campus));
+    navigate(`/campuses`);
+  };
+
   return (
     <div>
-      <h1>{campus.name}</h1>
-      <img src={campus.imageUrl} id="campus-image" />
-      <div>Students Attending: {students.length}</div>
-      <ul>
-        {students.map((student) => {
-          return (
-            <li key={student.id}>
-              <Link to={`/students/${student.id}`}>
-                <strong>
-                  {student.firstName} {student.lastName}
-                </strong>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-      <div>{campus.address}</div>
-      <div>{campus.description}</div>
+      <form onSubmit={updateCampusInfo}>
+        <input value={name} onChange={(event) => setName(event.target.value)} />
+        <input value={address} onChange={(event) => setAddress(event.target.value)} />
+        <input value={description} onChange={(event) => setDescription(event.target.value)} />
+        <input value={imageUrl} onChange={(event) => setImageUrl(event.target.value)} />
+        <button type="submit">Update</button>
+      </form>
+      <div>
+        <h2>Students Attending</h2>
+        <ul>
+          {students.map((student) => {
+            if (student.campusId === id * 1) {
+              return (
+                <li key={student.id}>
+                  <Link to={`/students/${student.id}`}>
+                    {student.firstName} {student.lastName}
+                  </Link>
+                  <button onClick={() => dispatch(deleteStudent(student.id))}>Delete Student</button>
+                </li>
+              );
+            }
+          })}
+        </ul>
+      </div>
     </div>
+    
   );
 };
+
 
 export default SingleCampus;

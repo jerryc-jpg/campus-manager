@@ -18,17 +18,59 @@ const fetchCampuses = createAsyncThunk("fetchCampuses", async () => {
   return data;
 });
 
-const fetchSingleStudent = createAsyncThunk(
-  "fetchSingleStudent",
-  async (id) => {
-    const { data } = await axios.get(`/api/students/${id}`);
+const createStudent = createAsyncThunk("createStudent", async (student) => {
+  try {
+    const { data } = await axios.post("/api/students", student);
     return data;
+  } catch (error) {
+    console.log(error);
   }
-);
+});
 
-const fetchSingleCampus = createAsyncThunk("fetchSingleCampus", async (id) => {
-  const { data } = await axios.get(`/api/campuses/${id}`);
-  return data;
+const createCampus = createAsyncThunk("createCampus", async (campus) => {
+  try {
+    const response = await axios.post("/api/campuses", campus);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+const updateStudent = createAsyncThunk("updateStudent", async (student) => {
+  try {
+    const { data } = await axios.put(`/api/students/${student.id}`, student);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+const updateCampus = createAsyncThunk("updateCampus", async (campus) => {
+  try {
+    const { data } = await axios.put(`/api/campuses/${campus.id}`, campus);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
+const deleteStudent = createAsyncThunk("deleteStudent", async (id) => {
+  try {
+    await axios.delete(`/api/students/${id}`);
+    return id;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+const deleteCampus = createAsyncThunk("deleteCampus", async (id) => {
+  try {
+    await axios.delete(`/api/campuses/${id}`);
+    return id;
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 const studentsSlice = createSlice({
@@ -39,21 +81,18 @@ const studentsSlice = createSlice({
     builder.addCase(fetchStudents.fulfilled, (state, action) => {
       return action.payload;
     });
-    builder.addCase(fetchSingleStudent.fulfilled, (state, action) => {
-      const singleStudent = action.payload;
-      const existingStudent = state.find(
-        (student) => student.id === singleStudent.id
-      );
-
-      if (existingStudent) {
-        return state.map((student) =>
-          student.id === singleStudent.id ? singleStudent : student
-        );
-      } else {
-        return [...state, singleStudent];
-      }
+    builder.addCase(createStudent.fulfilled, (state, action) => {
+      return [...state, action.payload];
     });
-  },
+    builder.addCase(deleteStudent.fulfilled, (state, action) => {
+      return state.filter((student) => student.id !== action.payload);
+    }
+    )
+    builder.addCase(updateStudent.fulfilled, (state, action) => {
+      console.log(action.payload);
+      return state.map((student) => student.id === action.payload.id ? action.payload : student);
+    });
+        },
 });
 
 const campusesSlice = createSlice({
@@ -64,20 +103,17 @@ const campusesSlice = createSlice({
     builder.addCase(fetchCampuses.fulfilled, (state, action) => {
       return action.payload;
     });
-    builder.addCase(fetchSingleCampus.fulfilled, (state, action) => {
-      const singleCampus = action.payload;
-      const existingCampus = state.find(
-        (campus) => campus.id === singleCampus.id
-      );
-
-      if (existingCampus) {
-        return state.map((campus) =>
-          campus.id === singleCampus.id ? singleCampus : campus
-        );
-      } else {
-        return [...state, singleCampus];
-      }
+    builder.addCase(createCampus.fulfilled, (state, action) => {
+      return [...state, action.payload];
     });
+    builder.addCase(deleteCampus.fulfilled, (state, action) => {
+      return state.filter((campus) => campus.id !== action.payload);
+    }
+    );
+    builder.addCase(updateCampus.fulfilled, (state, action) => {
+      return state.map((campus) => campus.id === action.payload.id ? action.payload : campus);
+    }
+    );
   },
 });
 
@@ -89,4 +125,13 @@ const store = configureStore({
 });
 
 export default store;
-export { fetchStudents, fetchCampuses, fetchSingleStudent, fetchSingleCampus };
+export {
+  fetchStudents,
+  fetchCampuses,
+  createStudent,
+  createCampus,
+  deleteStudent,
+  deleteCampus,
+  updateStudent,
+  updateCampus,
+};

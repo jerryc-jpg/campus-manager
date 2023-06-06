@@ -21,9 +21,9 @@ const Main = () => {
   return (
     <Router>
       <div>
-        <nav>
-          <Link to="/campuses">Campuses</Link>
-          <Link to="/students">Students</Link>
+        <nav class="row">
+          <Link to="/campuses" class='col-5'>Campuses</Link>
+          <Link to="/students" class='col-2'>Students</Link>
         </nav>
         <h1>Acme Schools</h1>
         <Routes>
